@@ -9,10 +9,18 @@ MENU = {1: ".List all products in store",
 
 
 
+"""
+Main entry point for the Best Buy Store management system.
 
+This script handles the user interface, allowing users to view products,
+check stock levels, and place orders through an interactive menu.
+"""
 def start(store_data):
+    """
+        Runs the main interactive menu loop for the store with input validation.
+        """
     temp_store_list = []
-    temp_product_list = store_data.products
+    temp_product_list = store_data.get_all_products()
     # Looping over the menu to show it for the user
     for num, value in MENU.items():
         print(str(num) + str(value))
@@ -59,7 +67,12 @@ def start(store_data):
             case 4:
                 quit("Exiting the program. Goodbye!")
 
+"""
+    Initializes the inventory and launches the application.
 
+    Sets up the default product list, creates the Store instance, 
+    and passes it to the start function to begin user interaction.
+    """
 def main():
     # setup initial stock of inventory
     product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),

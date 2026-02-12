@@ -1,7 +1,23 @@
 class Product:
+    """
+        Represents an item available in the store's inventory.
 
+        Attributes:
+            name (str): The name of the product.
+            price (float): The cost of a single unit of the product.
+            quantity (int): The current stock level.
+            active (bool): Whether the product is currently available for sale.
+        """
 
     def __init__(self, name, price, quantity):
+        """
+                Initializes a new Product instance.
+
+                Args:
+                    name (str): The name of the product.
+                    price (float): The price of the product.
+                    quantity (int): Initial stock quantity.
+                """
         try:
             self.name = name
             self.price = price
@@ -12,10 +28,12 @@ class Product:
 
 
     def get_quantity(self):
+        """Returns the current quantity of the product."""
         return self.quantity
 
 
     def get_price(self):
+        """Returns the price of the product."""
         return self.price
 
 
@@ -24,6 +42,12 @@ class Product:
 
 
     def set_quantity(self, quantity):
+        """
+                Reduces the stock quantity by the specified amount.
+
+                Args:
+                    quantity (int): The amount to subtract from the current stock.
+                """
         self.quantity -= quantity
 
 
@@ -46,6 +70,18 @@ class Product:
             print("")
 
     def buy(self, quantity):
+        """
+                Processes a purchase of the product.
+
+                Checks if sufficient stock exists, updates the quantity, and
+                deactivates the product if stock reaches zero.
+
+                Args:
+                    quantity (int): The number of units to buy.
+
+                Returns:
+                    float: The total cost of the purchase, or 0 if stock is insufficient.
+                """
         if quantity > self.get_quantity():
             # print("\nNot enough quantity of this product\n")
             return 0
