@@ -24,10 +24,7 @@ class Product:
 
 
     def set_quantity(self, quantity):
-        if quantity > self.get_quantity():
-            print("\nNot enough quantity of this product\n")
-        else:
-            self.quantity -= quantity
+        self.quantity -= quantity
 
 
     def is_active(self):
@@ -43,17 +40,20 @@ class Product:
 
 
     def show(self):
-        if self.active:
+        if self.is_active():
             print(f"{self.get_name()}, Price: {self.get_price()}, Quantity: {self.quantity}")
         else:
-            print("This product has been sold out")
+            print("")
 
     def buy(self, quantity):
+        if quantity > self.get_quantity():
+            # print("\nNot enough quantity of this product\n")
+            return 0
         total_purchases = quantity * self.price
         self.set_quantity(quantity)
         if self.get_quantity() == 0:
+            print(f"Deactivated")
             self.deactivate()
-
         return total_purchases
 
 

@@ -17,7 +17,10 @@ class Store:
 
 
     def get_total_quantity(self) -> int:
-        return len(self.products)
+        total_quantity = 0
+        for one_product in self.products:
+            total_quantity += one_product.quantity
+        return total_quantity
 
 
     def get_all_products(self) -> list[products.Product]:
@@ -29,19 +32,7 @@ class Store:
 
 
     def order(self,shopping_list) -> float:
-        print(shopping_list)
         total_price = 0
         for product,quantity in shopping_list:
-            total_price = total_price + (product.price * quantity)
+            total_price += product.buy(quantity)
         return total_price
-
-product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
-                products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                products.Product("Google Pixel 7", price=500, quantity=250),
-               ]
-
-best_buy = Store(product_list)
-my_products = best_buy.get_all_products()
-print(my_products)
-print(best_buy.get_total_quantity())
-print(best_buy.order([(my_products[0], 1), (my_products[1], 3)]))
