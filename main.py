@@ -1,3 +1,5 @@
+import sys
+
 import products
 import store
 
@@ -9,53 +11,61 @@ MENU = {1: ".List all products in store",
 
 
 
-"""
-Main entry point for the Best Buy Store management system.
-
-This script handles the user interface, allowing users to view products,
-check stock levels, and place orders through an interactive menu.
-"""
-def start(store_data):
-    """
-        Runs the main interactive menu loop for the store with input validation.
-        """
-    temp_store_list = []
-    temp_product_list = store_data.get_all_products()
-    # Looping over the menu to show it for the user
+def print_menu():
     for num, value in MENU.items():
         print(str(num) + str(value))
     print()
+
+
+
+def start(store_data):
+    """
+    Main entry point for the Best Buy Store management system.
+
+    This script handles the user interface, allowing users to view products,
+    check stock levels, and place orders through an interactive menu.
+    """
+    temp_store_list = []
+    available_products = store_data.get_all_products()
+    # Looping over the menu to show it for the user
+
     # Checking user choice
     while True:
-        choice = int(input("\nEnter choice (1 - 4): ").strip())
-        if choice not in range(10) or choice == "":
-            print("Invalid choice. Please enter a valid choice." )
-            choice = int(input("Enter choice (1 - 4): ").strip())
+        print_menu()
+        user_input = input("\nEnter choice (1 - 4): ").strip()
+        try:
+            choice = int(user_input)
+            if choice not in range(1, 5):
+                print("Error: Please select a number between 1 and 4.\n")
+                continue
+        except ValueError:
+            print("Error: Invalid input. Please enter a number.")
+            continue
         match choice:
             case 1:
-                for product in temp_product_list:
-                    product.show()
+                [product.show() for product in available_products]
+                print()
             case 2:
                 print(f"Total of {store_data.get_total_quantity()} items in store.")
             case 3:
                 print("------")
-                index = 0
-                for product in temp_product_list:
+                for index, product in enumerate(available_products, 1):
+                    print(f"{index}. ", end="")
                     product.show()
                 print("------")
                 print("When you want to finish order, enter empty text")
                 while True:
                     product_num = input("Enter product number: ")
                     product_quantity = input("Enter quantity: ")
+                    available_products = store_data.get_all_products()
                     if product_num.strip() == "" or product_quantity.strip() == "":
                         break
-                    if int(product_num.strip()) not in range(1,4):
+                    if int(product_num.strip())-1 not in range(len(available_products)):
                         print("Invalid product number. Please enter a valid product number.")
                         break
-                    if not temp_product_list[int(product_num)-1].is_active():
-                        store_data.remove_product(temp_product_list[int(product_num)-1])
-                        temp_product_list = store_data.products
-                    temp_store_list.append((temp_product_list[int(product_num)-1], int(product_quantity)))
+                    if not available_products[int(product_num)-1].is_active():
+                        available_products = store_data.products
+                    temp_store_list.append((available_products[int(product_num)-1], int(product_quantity)))
                 # print(temp_store_list)
                 order_total = store_data.order(temp_store_list)
                 if order_total == 0:
@@ -65,7 +75,7 @@ def start(store_data):
                     temp_store_list = []
 
             case 4:
-                quit("Exiting the program. Goodbye!")
+                sys.exit("Exiting the program. Goodbye!")
 
 """
     Initializes the inventory and launches the application.

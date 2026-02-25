@@ -1,3 +1,6 @@
+from logging import exception
+
+
 class Product:
     """
         Represents an item available in the store's inventory.
@@ -22,7 +25,7 @@ class Product:
             self.name = name
             self.price = price
             self.quantity = quantity
-            self.active = True
+            self.active = quantity > 0
         except Exception as e:
             print(e)
 
@@ -84,13 +87,12 @@ class Product:
                 """
         if quantity > self.get_quantity():
             # print("\nNot enough quantity of this product\n")
-            return 0
-        total_purchases = quantity * self.price
+            raise ValueError(f"Insufficient stock for {self.name}.")
         self.set_quantity(quantity)
         if self.get_quantity() == 0:
             print(f"Deactivated")
             self.deactivate()
-        return total_purchases
+        return quantity * self.price
 
 
 # bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)

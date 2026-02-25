@@ -16,9 +16,7 @@ class Store:
                 Args:
                     available_products (list): A list of Product instances.
                 """
-        print(available_products)
         self.products = available_products
-        print(self.products)
 
 
     def add_product(self, product):
@@ -51,14 +49,10 @@ class Store:
                 Returns:
                     list: A list of active Product objects.
                 """
-        active_products = []
-        for product_in_store in self.products:
-            if product_in_store.active:
-                active_products.append(product_in_store)
-        return active_products
+        return [p for p in self.products if p.is_active()]
 
-
-    def order(self,shopping_list) -> float:
+    @staticmethod
+    def order(shopping_list) -> float:
         """
                 Processes a bulk order of multiple products.
 
@@ -74,5 +68,7 @@ class Store:
                 """
         total_price = 0
         for product,quantity in shopping_list:
+            # if product in self.products:
+            #     total_price += product.buy(quantity)
             total_price += product.buy(quantity)
         return total_price
