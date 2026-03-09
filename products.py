@@ -1,5 +1,3 @@
-from logging import exception
-
 
 class Product:
     """
@@ -51,7 +49,7 @@ class Product:
                 Args:
                     quantity (int): The amount to subtract from the current stock.
                 """
-        self.quantity -= quantity
+        self.quantity = quantity
 
 
     def is_active(self):
@@ -72,6 +70,7 @@ class Product:
         else:
             print("")
 
+
     def buy(self, quantity):
         """
                 Processes a purchase of the product.
@@ -85,12 +84,14 @@ class Product:
                 Returns:
                     float: The total cost of the purchase, or 0 if stock is insufficient.
                 """
+        if quantity <= 0:
+            raise ValueError("Quantity must be greater than zero.")
         if quantity > self.get_quantity():
             # print("\nNot enough quantity of this product\n")
             raise ValueError(f"Insufficient stock for {self.name}.")
-        self.set_quantity(quantity)
+        self.set_quantity(self.get_quantity()-quantity)
         if self.get_quantity() == 0:
-            print(f"Deactivated")
+            print(f"{self.name} is now out of stock and has been deactivated.")
             self.deactivate()
         return quantity * self.price
 

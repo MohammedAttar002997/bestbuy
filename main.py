@@ -1,6 +1,5 @@
-import sys
-
 import products
+import sys
 import store
 
 
@@ -10,12 +9,10 @@ MENU = {1: ".List all products in store",
         4: ".Quit"}
 
 
-
 def print_menu():
     for num, value in MENU.items():
         print(str(num) + str(value))
     print()
-
 
 
 def start(store_data):
@@ -25,8 +22,6 @@ def start(store_data):
     This script handles the user interface, allowing users to view products,
     check stock levels, and place orders through an interactive menu.
     """
-    temp_store_list = []
-    available_products = store_data.get_all_products()
     # Looping over the menu to show it for the user
 
     # Checking user choice
@@ -41,9 +36,14 @@ def start(store_data):
         except ValueError:
             print("Error: Invalid input. Please enter a number.")
             continue
+        available_products = store_data.get_all_products()
         match choice:
             case 1:
-                [product.show() for product in available_products]
+                if not available_products:
+                    print("No products available. The store is empty.")
+                else:
+                    for product in available_products:
+                        product.show()
                 print()
             case 2:
                 print(f"Total of {store_data.get_total_quantity()} items in store.")
@@ -54,25 +54,34 @@ def start(store_data):
                     product.show()
                 print("------")
                 print("When you want to finish order, enter empty text")
+                temp_shopping_list = []
                 while True:
-                    product_num = input("Enter product number: ")
-                    product_quantity = input("Enter quantity: ")
+                    product_num_input = input("Enter product number: ")
+                    product_quantity_input = input("Enter quantity: ")
                     available_products = store_data.get_all_products()
-                    if product_num.strip() == "" or product_quantity.strip() == "":
+                    if product_num_input.strip() == "" and product_quantity_input.strip() == "":
                         break
-                    if int(product_num.strip())-1 not in range(len(available_products)):
+                    try:
+                        product_num = int(product_num_input)
+                        product_quantity = int(product_quantity_input)
+                    except ValueError:
+                        print("Error: Invalid input. Please enter numeric values for product number and quantity.")
+                        continue
+                    if product_num - 1 not in range(len(available_products)):
                         print("Invalid product number. Please enter a valid product number.")
-                        break
-                    if not available_products[int(product_num)-1].is_active():
-                        available_products = store_data.products
-                    temp_store_list.append((available_products[int(product_num)-1], int(product_quantity)))
+                        continue
+                    selected_product = available_products[product_num - 1]
+                    temp_shopping_list.append((selected_product, int(product_quantity)))
+                    print(f"Added {product_quantity} of {selected_product.get_name()} to your order.")
                 # print(temp_store_list)
-                order_total = store_data.order(temp_store_list)
-                if order_total == 0:
-                    print("\nError while making order! Quantity larger than what exists or invalid product number.")
+                if temp_shopping_list:
+                    try:
+                        order_total = store_data.order(temp_shopping_list)
+                        print(f"Order made! Total payment: ${order_total}")
+                    except Exception as e:
+                        print(f"\nError while making order: {e}")
                 else:
-                    print(f"Order made! Total payment: ${order_total}")
-                    temp_store_list = []
+                    print("No items were added to the order.")
 
             case 4:
                 sys.exit("Exiting the program. Goodbye!")

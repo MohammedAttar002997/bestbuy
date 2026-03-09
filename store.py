@@ -51,8 +51,9 @@ class Store:
                 """
         return [p for p in self.products if p.is_active()]
 
-    @staticmethod
-    def order(shopping_list) -> float:
+
+
+    def order(self,shopping_list) -> float:
         """
                 Processes a bulk order of multiple products.
 
